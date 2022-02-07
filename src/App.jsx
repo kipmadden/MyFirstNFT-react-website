@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ethers } from "ethers";
 import './styles/App.css';
 import twitterLogo from './assets/twitter-logo.svg';
 
@@ -77,7 +78,7 @@ const App = () => {
   */
 
   const askContractToMintNft = async () => {
-  const CONTRACT_ADDRESS = "INSERT_YOUR_DEPLOYED_RINKEBY_CONTRACT_ADDRESS";
+  const CONTRACT_ADDRESS = "0x2B439318bbDb9cDcb48b05dC79A42240d173E7e8";
 
   try {
     const { ethereum } = window;
