@@ -5,19 +5,20 @@ import twitterLogo from './assets/twitter-logo.svg';
 import myEpicNft from './utils/MyEpicNFT.json';
 
 // Constants
-const TWITTER_HANDLE = '_buildspace';
+const TWITTER_HANDLE = 'kipsmadden';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
-const OPENSEA_LINK = '';
+const OPENSEA_LINK = 'https://testnets.opensea.io/collection/three-word-mixup';
 const TOTAL_MINT_COUNT = 50;
 
 // Contract address - needs to be changed on each redeployment of contract
-const CONTRACT_ADDRESS = "0xEF044423bD721D2649021Ad53E16BcD26190735B";
+const CONTRACT_ADDRESS = "0xc30D8B2a9C887F5920A90bf6Ecc6565FeB4A3309";
 
 const App = () => {
 
   // State variable to store user's public wallet. Why we import useState above
     const [currentAccount, setCurrentAccount ] = useState("");
-    // const [numNfts, setNumNfts ] = useState("");
+    const [numNfts, setNumNfts ] = useState(0);
+    const [maxNftSupply, setMaxNftSupply ] = useState(0);
     
   //this is async.
   const checkIfWalletIsConnected = async () => {
@@ -39,6 +40,7 @@ const App = () => {
       const account = accounts[0];
       console.log("Found an authorized account:", account);
       setCurrentAccount(account)
+      setupEventListener()
     } else {
       console.log("No authorized account found")
     }
@@ -56,10 +58,19 @@ const App = () => {
 
       // Fancy method to request access to account.
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      // Alert user when they're on the wrong network
+      let chainId = await ethereum.request({ method: 'eth_chainId' });
+      console.log("Connected to chain " + chainId);
 
+      // String, hex code of the chainId of the Rinkebey test network
+      const rinkebyChainId = "0x4"; 
+      if (chainId !== rinkebyChainId) {
+        alert("You are not connected to the Rinkeby Test Network!");
+      }
      // This should print out public address once we authorize Metamask.
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]); 
+      setupEventListener()
     } catch (error) {
       console.log(error)
     }
@@ -73,7 +84,7 @@ const App = () => {
 
       if (ethereum) {
         // Same stuff again
-        const provider = new ethers.providers.Web3Provider(ethereum);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myEpicNft.abi, signer);
 
@@ -82,7 +93,8 @@ const App = () => {
         // If you're familiar with webhooks, it's very similar to that!
         connectedContract.on("NewEpicNFTMinted", (from, tokenId) => {
           console.log(from, tokenId.toNumber())
-          alert(`Hey there! We've minted your NFT and sent it to your wallet. It may be blank right now. It can take a max of 10 min to show up on OpenSea. Here's the link: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`)
+          setNumNfts(tokenId.toNumber())
+          alert(`Hey there! You've minted an NFT for this project! We've sent it to your wallet, but it may be blank right now. It can take a max of 10 min to show up on OpenSea. Here's the link: https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`)
         });
 
         console.log("Setup event listener!")
@@ -122,70 +134,96 @@ const App = () => {
     }
   }
   
-  // // Get the number of currently minted NFTs in the collection
-  // const getNumNfts = async () => {
+   // method to ask the blockchain contract to mint an NFT
+  const getCountNfts = async () => {
   
-  //   try {
-  //     const { ethereum } = window;
+    try {
+      const { ethereum } = window;
 
-  //     if (ethereum) {
-  //       const provider = new ethers.providers.Web3Provider(ethereum);
-  //       const signer = provider.getSigner();
-  //       const connectedContract = new ethers.Contract(CONTRACT_ADDRESS, myEpicNft.abi, signer);
-        
-  //       let count = await connectedContract.getTotalNFTsMintedSoFar().toNumber();
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, myEpicNft.abi, provider);
+        const nftCount = await contract.totalSupply();
+        const maxSupply = await contract.maxSupply();
+        setNumNfts(nftCount)
+        setMaxNftSupply(maxSupply)
+        console.log(`The contract totalSupply is ${nftCount}`);
 
-  //       console.log("Getting count of NFTs minted...")
-  //       await count.wait();
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  //       console.log(`Current total count of minted NFTs is${count.toNumber()}`);
-  //       // setNumNfts(count);
-        
-  //     } else {
-  //       console.log("Ethereum object doesn't exist!");
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
-  useEffect(() => {
-    checkIfWalletIsConnected();
-  }, [])
+
 
   // Render Methods
   const renderNotConnectedContainer = () => (
-    <button onClick={connectWallet} className="cta-button connect-wallet-button">
-      Connect to Wallet
-    </button>
+        <div>
+            <button onClick={connectWallet} className="cta-button connect-wallet-button">
+            Connect to Wallet
+            </button>
+            <p className="mint-count">{`${numNfts} out of ${maxNftSupply} NFTs minted`}
+            </p>
+            </div>
+    
+  );
+
+  const renderNoneLeft = () => (
+    <div>
+      <p className="mint-count">{`Sorry all ${maxNftSupply} NFTs have already been minted! Use the 'View Collection'link below to buy them on OpenSea`}
+      </p>
+    </div>
   );
 
   const renderMintUI = () => (
-  <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
-    Mint NFT
-  </button>
-)
+    <div>
+    <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
+      Mint NFT
+    </button>
+    <p className="mint-count">{`${numNfts} out of ${maxNftSupply} NFTs minted`}
+    </p>
+    </div>
+  );
+
+    useEffect(() => {
+    checkIfWalletIsConnected();
+    getCountNfts();
+  }, [])
+
 
   //  Added a conditional render! We don't want to show Connect to Wallet if we're already connected :).
   return (
     <div className="App">
       <div className="container">
         <div className="header-container">
-          <p className="header gradient-text">Epic NFT Collection</p>
+          <p className="header gradient-text">Crazy Animal Cards</p>
           <p className="sub-text">
-            Each unique. Each beautiful. Discover your NFT today.
+            Mint a Crazy Animal Activity Card and have a laugh!
           </p>
-          <p className="sub-text">
-            Each unique.   Discover your NFT today.
-          </p>
+          <div className="opensea-collection-container">
+          { numNfts === maxNftSupply ? (
+            renderNoneLeft()
+          ) : ( null )}
+          </div>
+          <div className="opensea-collection-container">
           {currentAccount === "" ? (
             renderNotConnectedContainer()
-          ) : (
-            /** Add askContractToMintNft Action for the onClick event  **/
-            <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
-              Mint NFT
-            </button>
+          ): (
+            renderMintUI()
           )}
+          </div>
+        </div>
+        <div className="opensea-collection-container">
+        <a
+          className="opensea-gradient"
+          href={OPENSEA_LINK}
+          target="_blank"
+          rel="noreferrer"
+          >{`🌊 View Collection on OpenSea`}</a>
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
@@ -194,7 +232,7 @@ const App = () => {
             href={TWITTER_LINK}
             target="_blank"
             rel="noreferrer"
-          >{`built on @${TWITTER_HANDLE}`}</a>
+          >{`built by @${TWITTER_HANDLE}`}</a>
         </div>
       </div>
     </div>

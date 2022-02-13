@@ -3,6 +3,9 @@
   background-color: #0d1116;
   overflow: scroll;
   text-align: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .container {
@@ -21,54 +24,59 @@
   margin: 0;
   font-size: 50px;
   font-weight: bold;
+  margin-bottom: 5rem;
 }
 
 .sub-text {
   font-size: 25px;
   color: white;
+  margin-bottom: 5rem;
 }
 
 .gradient-text {
-  background: -webkit-linear-gradient(left, #60c657 30%, #35aee2 60%);
+  background: -webkit-linear-gradient(left, #0196fd 30%, #c000eb 60%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .cta-button {
-  height: 45px;
+  height: 55px;
   border: 0;
   width: auto;
   padding-left: 40px;
   padding-right: 40px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 22px;
   font-weight: bold;
   color: white;
 }
 
 .connect-wallet-button {
-  background: -webkit-linear-gradient(left, #60c657, #35aee2);
+  background: -webkit-linear-gradient(left, #cb0226, #d1d409);
   background-size: 200% 200%;
-  animation: gradient-animation 4s ease infinite;
+  animation: gradient-animation 2s ease infinite;
 }
 
 .mint-button {
-  background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+  background: -webkit-linear-gradient(left, #0196fd, #c000eb);
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
   margin-right: 15px;
 }
 
 .opensea-button {
-  background-color: rgb(32, 129, 226);
+  background: -webkit-linear-gradient(left, #cb0226, #d1d409);
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
 }
 
 .mint-count {
   color: white;
   font-size: 18px;
   font-weight: bold;
+  margin-top: 3rem;
 }
 
 .footer-container {
@@ -87,6 +95,38 @@
   color: white;
   font-size: 16px;
   font-weight: bold;
+}
+
+.opensea-collection-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background: -webkit-linear-gradient(right, #a50bec1f 30%, rgba(125, 20, 139, 0.116) 60%);
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+}
+
+.opensea-collection-container:hover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background: -webkit-linear-gradient(right, #da2d0f 30%, rgba(125, 20, 139, 0.26) 60%);
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+}
+
+.opensea-gradient {
+  background: -webkit-linear-gradient(left, #13b2e2 40%, #1add14 60%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2rem;
 }
 
 /* KeyFrames */
