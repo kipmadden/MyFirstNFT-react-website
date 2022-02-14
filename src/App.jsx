@@ -8,6 +8,8 @@ import Lottie from "lottie-react";
 import minting from "./assets/minting.json";
 import nfts from "./assets/nfts.json";
 import pepecoin from "./assets/pepecoin.json";
+import pleasewait from "./assets/pleasewait.json";
+
 
 // Constants
 const TWITTER_HANDLE = 'kipsmadden';
@@ -351,7 +353,7 @@ const App = () => {
             Mint a Crazy Animal Activity Card and have a laugh!
           </p>
           <div className="header-container">
-          {elementToInclude}
+          {mintingNow === 1 ? <Lottie animationData={pleasewait} style={lottiestyle} loop="true"/> : elementToInclude}
           </div>
         </div>
         <div className="header-container">
