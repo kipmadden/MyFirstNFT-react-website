@@ -96,7 +96,6 @@ const App = () => {
     const [numNfts, setNumNfts ] = useState(0);
     const [maxNftSupply, setMaxNftSupply ] = useState(0);
     const [mintingNow, setMintingNow ] = useState(0);
-    
   //this is async.
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
@@ -147,6 +146,7 @@ const App = () => {
       if (chainIdnum !== rinkebyChainId) {
         //alert("You are not connected to the Rinkeby Test Network!");
         setWalletChain(1)
+        setCurrentAccount(accounts[0]); 
         return;
       }
      // This should print out public address once we authorize Metamask.
@@ -207,6 +207,7 @@ const App = () => {
         
         console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTxn.hash}`);
         setMintingNow(2)
+        getCountNfts()
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -243,6 +244,9 @@ const App = () => {
   const handleNetworkSwitch = async (networkName) => {
     setError();
     await changeNetwork({ networkName, setError});
+    setWalletChain(0)
+    console.log(`setWalletChain ${walletChain} currentAccount: ${currentAccount}`)
+    setupEventListener()
   }
 
   const networkChanged = (chainId) => {
@@ -332,8 +336,9 @@ const App = () => {
     useEffect(() => {
     checkIfWalletIsConnected();
     // getCountNfts();
-    return () => {
-      window.ethereum.removeListener("changeChanged", networkChanged);
+      window.ethereum.on("chainChanged", networkChanged);
+      return () => {
+        window.ethereum.removeListener("changeChanged", networkChanged);
     }
   }, [])
 
