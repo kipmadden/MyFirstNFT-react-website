@@ -40,7 +40,7 @@ const networks = {
     blockExplorerUrls: ["https://polygonscan.com/"]
   },
   rinkeby: {
-    chainId: `0x${Number(4).toString(16)}`,
+    chainId: "0x4",
     chainName: "Rinkeby",
     nativeCurrency: {
       name: "Rinkeby Ether",
@@ -48,7 +48,7 @@ const networks = {
       decimals: 18
     },
     rpcUrls: [
-      `https://rinkeby.infura.io/v3/demo`
+      "https://rinkeby.infura.io/v3/569c865feb98409d8234426c2b2fb480"
     ],
     blockExplorerUrls: ["https://rinkeby.etherscan.io"]
   }
@@ -56,18 +56,30 @@ const networks = {
 
 const changeNetwork = async ({ networkName, setError }) => {
   try {
-    if (!window.ethereum) throw new Error("No crypto wallet found");
-    await window.ethereum.request({
-      method: "wallet_addEthereumChain",
-      params: [
-        {
-          ...networks[networkName]
-        }
-      ]
-    });
-  } catch (err) {
-    setError(err.message);
+  await ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: '0x4' }],
+  });
+} catch (switchError) {
+  // This error code indicates that the chain has not been added to MetaMask.
+  if (switchError.code === 4902) {
+    try {
+      await ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: '0x4',
+            chainName: 'Rinkeby',
+            rpcUrls: ['https://rinkeby.infura.io/v3/569c865feb98409d8234426c2b2fb480'] /* ... */,
+          },
+        ],
+      });
+    } catch (addError) {
+      // handle "add" error
+    }
   }
+  // handle other "switch" errors
+}
 };
 
 const lottiestyle = {
@@ -127,12 +139,12 @@ const App = () => {
       // Fancy method to request access to account.
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
       // Alert user when they're on the wrong network
-      let chainId = await ethereum.request({ method: 'eth_chainId' });
-      console.log("Connected to chain " + chainId);
+      let chainIdnum = await ethereum.request({ method: 'eth_chainId' });
+      console.log("Connected to chain " + chainIdnum);
 
       // String, hex code of the chainId of the Rinkebey test network
       const rinkebyChainId = "0x4"; 
-      if (chainId !== rinkebyChainId) {
+      if (chainIdnum !== rinkebyChainId) {
         //alert("You are not connected to the Rinkeby Test Network!");
         setWalletChain(1)
         return;
@@ -252,8 +264,8 @@ const App = () => {
               Change Your MetaMask network
             </h1>
             <div>
-              <button onClick={() => handleNetworkSwitch("polygon")} className="cta-button connect-wallet-button">
-                Switch to Polygon Network
+              <button onClick={() => handleNetworkSwitch("rinkeby")} className="cta-button connect-wallet-button">
+                Switch to Rinkeby Network
               </button>
               <ErrorMessage message={error} />
             </div>
