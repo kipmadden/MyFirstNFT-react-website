@@ -336,10 +336,8 @@ const App = () => {
     useEffect(() => {
     checkIfWalletIsConnected();
     // getCountNfts();
-      window.ethereum.on("chainChanged", networkChanged);
-      return () => {
-        window.ethereum.removeListener("changeChanged", networkChanged);
-    }
+    
+
   }, [])
 
 
