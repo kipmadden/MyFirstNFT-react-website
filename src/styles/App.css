@@ -1,6 +1,6 @@
 .App {
   height: 100vh;
-  background-color: #0d1116;
+  background-color: #010101;
   overflow: scroll;
   text-align: center;
   color: white;
@@ -10,7 +10,7 @@
 
 .container {
   height: 100%;
-  background-color: #0d1116;
+  background-color: #010101;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -53,6 +53,17 @@
   color: white;
 }
 
+.animation: {
+  width: 100px;
+  height: 100px;
+}
+
+.noneleft-text {
+  font-size: 25px;
+  color: rgb(241, 10, 10);
+  margin-bottom: 1rem;
+}
+
 .connect-wallet-button {
   background: -webkit-linear-gradient(left, #cb0226, #d1d409);
   background-size: 200% 200%;
@@ -79,6 +90,13 @@
   margin-top: 3rem;
 }
 
+.need-wallet {
+  color: rgb(185, 3, 3);
+  font-size: 26px;
+  font-weight: bold;
+  margin-top: 3rem;
+}
+
 .footer-container {
   display: flex;
   justify-content: center;
@@ -97,6 +115,10 @@
   font-weight: bold;
 }
 
+.noneleft-container {
+  padding-top: 30px;
+}
+
 .opensea-collection-container {
   display: flex;
   justify-content: center;
@@ -106,7 +128,7 @@
   background: -webkit-linear-gradient(right, #a50bec1f 30%, rgba(125, 20, 139, 0.116) 60%);
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
-  margin-top: 5rem;
+  /* margin-top: 5rem; */
   margin-bottom: 5rem;
 }
 
