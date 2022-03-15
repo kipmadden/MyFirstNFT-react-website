@@ -14,12 +14,12 @@ import pleasewait from "./assets/pleasewait.json";
 // Constants
 const TWITTER_HANDLE = 'kipsmadden';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
-const OPENSEA_LINK = 'https://testnets.opensea.io/collection/crazy-animal-cards-v3';
+const OPENSEA_LINK = 'https://testnets.opensea.io/collection/crazy-animals-cafe';
 // const mySecret = process.env['infuraApi'];
 //const TOTAL_MINT_COUNT = 10;
 
 // Contract address - needs to be changed on each redeployment of contract
-const CONTRACT_ADDRESS = "0x98A866f322540410D43c7d300fC942D13bcbf35A";
+const CONTRACT_ADDRESS = "0xa49a6222bF6910F87fcf736C3B4a77c3016a0619";
 
 // Chains for this project
 const networks = {
@@ -348,9 +348,9 @@ const App = () => {
     <div className="App">
       <div className="container">
         <div className="header-container">
-          <p className="header gradient-text">Crazy Animal Cards</p>
+          <p className="header gradient-text">Crazy Animal Cafe</p>
           <p className="sub-text">
-            Mint a Crazy Animal Activity Card and have a laugh!
+            Mint a Crazy Animal Card and have a laugh!
           </p>
           <div className="header-container">
           {mintingNow === 1 ? <Lottie animationData={pleasewait} style={lottiestyle} loop="true"/> : elementToInclude}
